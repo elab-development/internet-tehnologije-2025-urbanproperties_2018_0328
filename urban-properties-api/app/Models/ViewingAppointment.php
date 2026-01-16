@@ -32,7 +32,7 @@ class ViewingAppointment extends Model
         return $this->belongsTo(Property::class);
     }
 
-    // N:1 ViewingAppointment -> User (buyer).
+    // N:1 ViewingAppointment -> User  (buyer).
     public function buyer()
     {
         return $this->belongsTo(User::class, 'buyer_id');
