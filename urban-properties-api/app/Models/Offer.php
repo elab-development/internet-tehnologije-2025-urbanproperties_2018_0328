@@ -38,7 +38,7 @@ class Offer extends Model
         return $this->belongsTo(User::class, 'buyer_id');
     }
 
-    // 1:1 Offer -> Transaction (opciono, kad ponuda postane kupoprodaja).
+    // 1:1 Offer -> Transaction  (opciono, kad ponuda postane kupoprodaja).
     public function transaction()
     {
         return $this->hasOne(Transaction::class);
