@@ -7,16 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unique('email');
-        });
+        // users.email je vec unique u create_users_table migraciji. Ne dodajemo ga opet.
 
         Schema::table('viewing_appointments', function (Blueprint $table) {
             $table->unique(['property_id', 'scheduled_at']);
         });
 
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unique('offer_id'); // 1:1 Transaction–Offer.
+            $table->unique('offer_id');
         });
     }
 
@@ -30,8 +28,6 @@ return new class extends Migration {
             $table->dropUnique('viewing_appointments_property_id_scheduled_at_unique');
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['email']);
-        });
+        // users.email unique ne diramo jer pripada create_users_table migraciji.
     }
 };

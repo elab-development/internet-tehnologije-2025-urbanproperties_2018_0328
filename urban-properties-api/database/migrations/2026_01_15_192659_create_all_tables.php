@@ -7,85 +7,71 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-
-            $table->string('name');
-            $table->string('email');
-            $table->timestamp('email_verified_at'); // bez nullable.
-            $table->string('password');
-            $table->string('phone'); // bez nullable.
-            $table->enum('role', ['administrator', 'sales_agent', 'buyer']); // bez default.
-            $table->string('remember_token', 100); // bez nullable.
-
-            $table->timestamp('created_at'); // bez nullable i bez default.
-            $table->timestamp('updated_at'); // bez nullable i bez default.
-        });
-
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('sales_agent_id'); // bez FK constraint.
+            $table->unsignedBigInteger('sales_agent_id');
 
             $table->string('title');
-            $table->text('description'); // bez nullable.
+            $table->text('description');
             $table->string('type');
             $table->string('address');
             $table->string('city');
-            $table->decimal('area_m2', 10, 2); // bez nullable.
-            $table->unsignedTinyInteger('bedrooms'); // bez default.
-            $table->unsignedTinyInteger('bathrooms'); // bez default.
+            $table->decimal('area_m2', 10, 2);
+            $table->unsignedTinyInteger('bedrooms');
+            $table->unsignedTinyInteger('bathrooms');
             $table->decimal('price', 12, 2);
-            $table->string('3d_image_url'); // bez nullable.
-            $table->enum('status', ['available', 'reserved', 'sold']); // bez default.
+            $table->string('3d_image_url');
+            $table->enum('status', ['available', 'reserved', 'sold']);
 
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            // BITNO: DATETIME umesto TIMESTAMP (bez default vrednosti).
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
 
         Schema::create('viewing_appointments', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('property_id');   // bez FK constraint.
-            $table->unsignedBigInteger('buyer_id');      // bez FK constraint.
-            $table->unsignedBigInteger('sales_agent_id');// bez FK constraint.
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('buyer_id');
+            $table->unsignedBigInteger('sales_agent_id');
 
             $table->timestamp('scheduled_at');
-            $table->enum('status', ['scheduled', 'completed', 'cancelled']); // bez default.
-            $table->text('notes'); // bez nullable.
+            $table->enum('status', ['scheduled', 'completed', 'cancelled']);
+            $table->text('notes');
 
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
 
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('property_id');   // bez FK constraint.
-            $table->unsignedBigInteger('buyer_id');      // bez FK constraint.
-            $table->unsignedBigInteger('sales_agent_id');// bez FK constraint.
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('buyer_id');
+            $table->unsignedBigInteger('sales_agent_id');
 
             $table->decimal('amount', 12, 2);
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'withdrawn']); // bez default.
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'withdrawn']);
 
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
 
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('offer_id');      // bez FK constraint.
-            $table->unsignedBigInteger('property_id');   // bez FK constraint.
-            $table->unsignedBigInteger('buyer_id');      // bez FK constraint.
-            $table->unsignedBigInteger('sales_agent_id');// bez FK constraint.
+            $table->unsignedBigInteger('offer_id');
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('buyer_id');
+            $table->unsignedBigInteger('sales_agent_id');
 
             $table->decimal('final_price', 12, 2);
-            $table->timestamp('signed_at'); // bez nullable.
-            $table->enum('payment_status', ['pending', 'paid', 'failed']); // bez default.
+            $table->timestamp('signed_at');
+            $table->enum('payment_status', ['pending', 'paid', 'failed']);
 
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
     }
 
@@ -95,6 +81,5 @@ return new class extends Migration {
         Schema::dropIfExists('offers');
         Schema::dropIfExists('viewing_appointments');
         Schema::dropIfExists('properties');
-        Schema::dropIfExists('users');
     }
 };
