@@ -47,7 +47,7 @@ class Property extends Model
         return $this->hasMany(ViewingAppointment::class);
     }
 
-    // 1:N Property -> Offers.
+    // 1:N Property ->  Offers.
     public function offers()
     {
         return $this->hasMany(Offer::class);
