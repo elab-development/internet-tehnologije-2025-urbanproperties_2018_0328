@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +33,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Registracija uspešna.',
             'data' => [
-                'user' => new UserResource($user),
+                'user' => $this->userPayload($user),
                 'token' => $token,
             ],
         ], 201);
@@ -65,7 +64,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Prijava uspešna.',
             'data' => [
-                'user' => new UserResource($user),
+                'user' => $this->userPayload($user),
                 'token' => $token,
             ],
         ], 200);
@@ -88,8 +87,22 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Ulogovani korisnik.',
             'data' => [
-                'user' => new UserResource($request->user()),
+                'user' => $this->userPayload($request->user()),
             ],
         ], 200);
+    }
+
+    private function userPayload(User $user): array
+    {
+        // Vraćamo samo bezbedna polja (bez password-a i sl.).
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'role' => $user->role,
+            'created_at' => optional($user->created_at)->toISOString(),
+            'updated_at' => optional($user->updated_at)->toISOString(),
+        ];
     }
 }
