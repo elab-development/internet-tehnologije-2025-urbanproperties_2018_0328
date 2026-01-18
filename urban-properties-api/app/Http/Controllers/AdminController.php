@@ -40,8 +40,11 @@ class AdminController extends Controller
         $appointmentsCountByAgent = ViewingAppointment::select('sales_agent_id', DB::raw('COUNT(*) as cnt'))
             ->groupBy('sales_agent_id')->pluck('cnt', 'sales_agent_id');
 
-        $offersCountByAgent = Offer::select('sales_agent_id', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('sales_agent_id')->pluck('cnt', 'sales_agent_id');
+        $offersCountByAgent = Offer::join('properties', 'offers.property_id', '=', 'properties.id')
+            ->select('properties.sales_agent_id', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('properties.sales_agent_id')
+            ->pluck('cnt', 'properties.sales_agent_id');
+
 
         $transactionsCountByAgent = Transaction::select('sales_agent_id', DB::raw('COUNT(*) as cnt'))
             ->groupBy('sales_agent_id')->pluck('cnt', 'sales_agent_id');
@@ -96,13 +99,23 @@ class AdminController extends Controller
             ->whereBetween('created_at', [$validated['date_from'], $validated['date_to']]);
 
         if (!empty($validated['sales_agent_id'])) {
+            // ViewingAppointment ima sales_agent_id direktno, ovo je OK.
             $vaQuery->where('sales_agent_id', $validated['sales_agent_id']);
-            $offerQuery->where('sales_agent_id', $validated['sales_agent_id']);
+
+            // Offer NEMA sales_agent_id, zato filtriramo preko property-ja.
+            $offerQuery->whereHas('property', function ($q) use ($validated) {
+                $q->where('sales_agent_id', $validated['sales_agent_id']);
+            });
         }
 
         if (!empty($validated['city'])) {
-            $vaQuery->whereHas('property', fn ($q) => $q->where('city', $validated['city']));
-            $offerQuery->whereHas('property', fn ($q) => $q->where('city', $validated['city']));
+            $vaQuery->whereHas('property', function ($q) use ($validated) {
+                $q->where('city', $validated['city']);
+            });
+
+            $offerQuery->whereHas('property', function ($q) use ($validated) {
+                $q->where('city', $validated['city']);
+            });
         }
 
         $viewingAppointments = $vaQuery->orderByDesc('scheduled_at')->get();

@@ -193,7 +193,10 @@ class PropertyController extends Controller
             ->whereIn('status', [Offer::STATUS_PENDING, Offer::STATUS_ACCEPTED])
             ->exists();
 
-        $hasTransactions = Transaction::where('property_id', $property->id)->exists();
+        // Transaction nema property_id -> proveravamo preko offer relacije:
+        $hasTransactions = Transaction::whereHas('offer', function ($q) use ($property) {
+            $q->where('property_id', $property->id);
+        })->exists();
 
         if ($hasActiveAppointments || $hasActiveOffers || $hasTransactions) {
             return response()->json([
@@ -203,6 +206,10 @@ class PropertyController extends Controller
             ], 409);
         }
 
+        // (Opcionalno ali preporuceno) Obrisi i povezane otkazane termine/odbijene ponude ako ih ima.
+        // ViewingAppointment::where('property_id', $property->id)->delete();
+        // Offer::where('property_id', $property->id)->delete();
+
         $property->delete();
 
         return response()->json([
@@ -211,4 +218,5 @@ class PropertyController extends Controller
             'data' => null,
         ], 200);
     }
+
 }

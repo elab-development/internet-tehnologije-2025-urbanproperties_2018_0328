@@ -12,7 +12,6 @@ class TransactionResource extends JsonResource
         return [
             'id' => $this->id,
             'offer_id' => $this->offer_id,
-            'property_id' => $this->property_id,
             'buyer_id' => $this->buyer_id,
             'sales_agent_id' => $this->sales_agent_id,
             'final_price' => $this->final_price,
@@ -24,6 +23,15 @@ class TransactionResource extends JsonResource
             'offer' => $this->whenLoaded('offer', function () {
                 return (new OfferResource($this->offer))->resolve();
             }),
+
+            // Nekretnina ide preko offer->property.
+            'property' => $this->whenLoaded('offer', function () {
+                if (!$this->offer?->relationLoaded('property')) {
+                    return null;
+                }
+                return (new PropertyResource($this->offer->property))->resolve();
+            }),
+
             'buyer' => $this->whenLoaded('buyer', function () {
                 return (new UserResource($this->buyer))->resolve();
             }),
