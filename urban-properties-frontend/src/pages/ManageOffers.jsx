@@ -315,6 +315,39 @@ export default function ManageOffers() {
               <span className="v mono">{formatCurrency(activeOffer?.property?.price)}</span>
             </div>
           </div>
+          {activeOffer?.transaction || activeOffer?.transaction_id ? (
+            <div className="detailsCard">
+              <div className="detailsLabel">Transaction</div>
+
+              <div className="detailsRow">
+                <span className="k">Transaction ID</span>
+                <span className="v mono">
+                  {activeOffer?.transaction?.id ?? activeOffer?.transaction_id ?? "-"}
+                </span>
+              </div>
+
+              <div className="detailsRow">
+                <span className="k">Payment Status</span>
+                <span className="v">
+                  {activeOffer?.transaction?.payment_status || "-"}
+                </span>
+              </div>
+
+              <div className="detailsRow">
+                <span className="k">Final Price</span>
+                <span className="v mono">
+                  {formatCurrency(activeOffer?.transaction?.final_price)}
+                </span>
+              </div>
+
+              <div className="detailsRow">
+                <span className="k">Signed At</span>
+                <span className="v mono">
+                  {formatDate(activeOffer?.transaction?.signed_at)}
+                </span>
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div className="detailsActions">

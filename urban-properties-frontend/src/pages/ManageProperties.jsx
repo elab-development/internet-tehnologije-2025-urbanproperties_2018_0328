@@ -130,6 +130,8 @@ export default function ManageProperties() {
         body: JSON.stringify({
           property_id: offerProperty.id,
           amount: amountNum,
+          status: "pending",
+          transaction_id: null,
         }),
       });
 

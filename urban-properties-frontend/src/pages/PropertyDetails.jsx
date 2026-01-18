@@ -90,6 +90,8 @@ export default function PropertyDetails() {
         body: JSON.stringify({
           property_id: property.id,
           amount: amountNum,
+          status: "pending",
+          transaction_id: null,
         }),
       });
 

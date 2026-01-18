@@ -26,6 +26,23 @@ return new class extends Migration {
         Schema::table('transactions', function (Blueprint $table) {
             $table->timestamp('signed_at')->nullable()->change();
         });
+
+        // DODATO: offers.transaction_id nullable
+        Schema::table('offers', function (Blueprint $table) {
+            // prvo skloni FK da bi mogao da menjaš kolonu
+            $table->dropForeign(['transaction_id']);
+        });
+
+        Schema::table('offers', function (Blueprint $table) {
+            $table->unsignedBigInteger('transaction_id')->nullable()->change();
+        });
+
+        Schema::table('offers', function (Blueprint $table) {
+            // vrati FK (preporuka: kad se transaction obriše -> transaction_id postaje NULL)
+            $table->foreign('transaction_id')
+                ->references('id')->on('transactions')
+                ->nullOnDelete();
+        });
     }
 
     public function down(): void
@@ -48,6 +65,21 @@ return new class extends Migration {
 
         Schema::table('transactions', function (Blueprint $table) {
             $table->timestamp('signed_at')->nullable(false)->change();
+        });
+
+        // rollback za offers.transaction_id
+        Schema::table('offers', function (Blueprint $table) {
+            $table->dropForeign(['transaction_id']);
+        });
+
+        Schema::table('offers', function (Blueprint $table) {
+            $table->unsignedBigInteger('transaction_id')->nullable(false)->change();
+        });
+
+        Schema::table('offers', function (Blueprint $table) {
+            $table->foreign('transaction_id')
+                ->references('id')->on('transactions')
+                ->restrictOnDelete();
         });
     }
 };

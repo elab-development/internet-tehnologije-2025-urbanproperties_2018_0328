@@ -65,7 +65,7 @@ class OfferController extends Controller
                 'status' => Offer::STATUS_PENDING,
                 // transaction_id se mora popuniti posle, ali baza ga ne prima kao NULL.
                 // Ako ti baza ne dozvoljava privremenu vrednost, moraće se migracija da se ispravi.
-                'transaction_id' => 0,
+                'transaction_id' => null,
             ]);
 
             // 2) Kreiraj placeholder transakciju.

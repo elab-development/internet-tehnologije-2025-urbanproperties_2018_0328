@@ -20,7 +20,7 @@ return new class extends Migration {
         Schema::table('offers', function (Blueprint $table) {
             $table->foreign('property_id')->references('id')->on('properties')->restrictOnDelete();
             $table->foreign('buyer_id')->references('id')->on('users')->restrictOnDelete();
-            $table->foreign('transaction_id')->references('id')->on('transactions')->restrictOnDelete();
+            $table->foreign('transaction_id')->references('id')->on('transactions')->nullOnDelete();
         });
 
         Schema::table('transactions', function (Blueprint $table) {
