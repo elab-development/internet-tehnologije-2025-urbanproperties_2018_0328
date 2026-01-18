@@ -16,7 +16,6 @@ class TransactionFactory extends Factory
     {
         return [
             'offer_id' => Offer::factory(),
-            'property_id' => Property::factory(),
             'buyer_id' => User::factory()->buyer(),
             'sales_agent_id' => User::factory()->salesAgent(),
             'final_price' => fake()->randomFloat(2, 30000, 450000),

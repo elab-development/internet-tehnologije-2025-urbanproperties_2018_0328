@@ -20,12 +20,11 @@ return new class extends Migration {
         Schema::table('offers', function (Blueprint $table) {
             $table->foreign('property_id')->references('id')->on('properties')->restrictOnDelete();
             $table->foreign('buyer_id')->references('id')->on('users')->restrictOnDelete();
-            $table->foreign('sales_agent_id')->references('id')->on('users')->restrictOnDelete();
+            $table->foreign('transaction_id')->references('id')->on('transactions')->restrictOnDelete();
         });
 
         Schema::table('transactions', function (Blueprint $table) {
             $table->foreign('offer_id')->references('id')->on('offers')->restrictOnDelete();
-            $table->foreign('property_id')->references('id')->on('properties')->restrictOnDelete();
             $table->foreign('buyer_id')->references('id')->on('users')->restrictOnDelete();
             $table->foreign('sales_agent_id')->references('id')->on('users')->restrictOnDelete();
         });
@@ -35,13 +34,12 @@ return new class extends Migration {
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropForeign(['offer_id']);
-            $table->dropForeign(['property_id']);
             $table->dropForeign(['buyer_id']);
             $table->dropForeign(['sales_agent_id']);
         });
 
         Schema::table('offers', function (Blueprint $table) {
-            $table->dropForeign(['property_id']);
+            $table->dropForeign(['transaction_id']);
             $table->dropForeign(['buyer_id']);
             $table->dropForeign(['sales_agent_id']);
         });

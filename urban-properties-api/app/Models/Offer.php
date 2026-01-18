@@ -17,7 +17,7 @@ class Offer extends Model
     protected $fillable = [
         'property_id',
         'buyer_id',
-        'sales_agent_id',
+        'transaction_id',
         'amount',
         'status',
     ];

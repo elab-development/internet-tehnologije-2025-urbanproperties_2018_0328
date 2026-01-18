@@ -49,7 +49,7 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('property_id');
             $table->unsignedBigInteger('buyer_id');
-            $table->unsignedBigInteger('sales_agent_id');
+            $table->unsignedBigInteger('transaction_id')->nullable();
 
             $table->decimal('amount', 12, 2);
             $table->enum('status', ['pending', 'accepted', 'rejected', 'withdrawn']);
@@ -62,7 +62,6 @@ return new class extends Migration {
             $table->id();
 
             $table->unsignedBigInteger('offer_id');
-            $table->unsignedBigInteger('property_id');
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('sales_agent_id');
 

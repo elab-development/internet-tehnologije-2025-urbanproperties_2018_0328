@@ -11,7 +11,7 @@ class TransactionSeeder extends Seeder
 {
     public function run(): void
     {
-        $acceptedOffers = Offer::with('property') // da $offer->property radi bez N+1.
+        $acceptedOffers = Offer::with('property')
             ->where('status', Offer::STATUS_ACCEPTED)
             ->doesntHave('transaction')
             ->get();
@@ -19,9 +19,12 @@ class TransactionSeeder extends Seeder
         foreach ($acceptedOffers as $offer) {
             $property = $offer->property;
 
-            Transaction::factory()->create([
+            if (!$property) {
+                continue;
+            }
+
+            $transaction = Transaction::factory()->create([
                 'offer_id' => $offer->id,
-                'property_id' => $offer->property_id,
                 'buyer_id' => $offer->buyer_id,
                 'sales_agent_id' => $property->sales_agent_id,
                 'final_price' => $offer->amount,
@@ -29,10 +32,19 @@ class TransactionSeeder extends Seeder
                 'payment_status' => fake()->randomElement([
                     Transaction::PAYMENT_PENDING,
                     Transaction::PAYMENT_PAID,
+                    Transaction::PAYMENT_FAILED,
                 ]),
             ]);
 
-            $property->update(['status' => Property::STATUS_SOLD]);
+            // Uskladi Offer.transaction_id sa kreiranom transakcijom (posto Offer model ima transaction_id).
+            $offer->update([
+                'transaction_id' => $transaction->id,
+            ]);
+
+            // Nakon transakcije, nekretnina postaje sold.
+            $property->update([
+                'status' => Property::STATUS_SOLD,
+            ]);
         }
     }
 }

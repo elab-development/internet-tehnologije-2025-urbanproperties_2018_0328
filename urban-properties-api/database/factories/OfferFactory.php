@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Offer;
-use App\Models\Property;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,7 +14,7 @@ class OfferFactory extends Factory
     public function definition(): array
     {
         return [
-            'property_id' => Property::factory(),
+            'transaction_id' => Transaction::factory(),
             'buyer_id' => User::factory()->buyer(),
             'sales_agent_id' => User::factory()->salesAgent(),
             'amount' => fake()->randomFloat(2, 30000, 450000),
