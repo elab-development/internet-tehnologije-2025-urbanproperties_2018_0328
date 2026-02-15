@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/agent/viewing-appointments', [ViewingAppointmentController::class, 'forMyProperties']);
     Route::patch('/viewing-appointments/{viewingAppointment}/status', [ViewingAppointmentController::class, 'updateStatus']);
     Route::get('/agent/offers', [OfferController::class, 'forMyProperties']);
+    Route::patch('/offers/{offer}/status', [OfferController::class, 'updateStatus']);
 
     // Admin.
     Route::get('/admin/users', [AdminController::class, 'users']);

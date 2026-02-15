@@ -11,7 +11,7 @@ import Button from "../components/Button";
   - Filteri: search (title), type, sort by price.
   - 4 kartice po strani.
   - Make an Offer otvara modal i kreira Offer.
-  - Book a Viewing Appointment: toast (under development).
+  - Book a Viewing Appointment: navigacija ka buyer viewing appointments page (prefill property_id).
   - View Details: navigacija na details rutu.
 */
 export default function ManageProperties() {
@@ -89,6 +89,12 @@ export default function ManageProperties() {
     showToast._t = window.setTimeout(() => {
       setToast({ open: false, message: "" });
     }, 2600);
+  };
+
+  const goToViewingAppointments = (property) => {
+    const base = "/buyer/manage-my-viewing-appointments";
+    const pid = property?.id;
+    navigate(pid ? `${base}?property_id=${pid}` : base);
   };
 
   const openOffer = (property) => {
@@ -222,6 +228,13 @@ export default function ManageProperties() {
           </div>
 
           <div className="mpHeaderActions">
+            <Button
+              variant="outline"
+              className="mpViewingsBtn"
+              onClick={() => goToViewingAppointments(null)}
+            >
+              My Viewing Appointments
+            </Button>
             <Button variant="outline" onClick={loadAllProperties}>
               Refresh
             </Button>
@@ -274,9 +287,9 @@ export default function ManageProperties() {
                 <Card
                   key={p.id}
                   property={p}
-                  sellerName={p?.sales_agent?.name} 
+                  sellerName={p?.sales_agent?.name}
                   onMakeOffer={() => openOffer(p)}
-                  onBookViewing={() => showToast("Viewing appointments are under development.")}
+                  onBookViewing={() => goToViewingAppointments(p)}
                   onViewDetails={() => navigate(`/buyer/manage-properties/property-details/${p.id}`)}
                 />
               ))}
@@ -357,6 +370,13 @@ const css = `
     justify-content:space-between;
     gap: 12px;
     margin-bottom: 12px;
+  }
+
+  .mpHeaderActions{
+    display:flex;
+    gap: 10px;
+    justify-content:flex-end;
+    flex-wrap: wrap;
   }
 
   .mpTitle{

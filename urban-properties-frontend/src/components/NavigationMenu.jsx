@@ -94,6 +94,7 @@ function getLinksByRole(role) {
     return [
       { label: "Manage My Properties", path: "/sales-agent/manage-my-properties" },
       { label: "Manage My Viewing Appointments", path: "/sales-agent/manage-my-viewing-appointments" },
+      { label: "Manage Offers", path: "/sales-agent/manage-offers" },
     ];
   }
 

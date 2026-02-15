@@ -16,6 +16,11 @@ import ManageOffers from "./pages/ManageOffers";
 import NotFound from "./components/NotFound";
 import ManageSalesAgentProperties from "./pages/ManageSalesAgentProperties";
 import ManageUsers from "./pages/ManageUsers";
+import ManageBuyerViewingAppointments from "./pages/ManageBuyerViewingAppointments";
+import ManageMyViewingAppointments from "./pages/ManageMyViewingAppointments";
+import ManageSellerOffers from "./pages/ManageSellerOffers";
+import AdminMetrics from "./pages/AdminMetrics";
+import "./App.css";
 
 
 export default function App() {
@@ -86,10 +91,7 @@ export default function App() {
             path="/buyer/manage-my-viewing-appointments"
             element={
               <RequireAuth>
-                <NotFound
-                title="Under Development"
-                subtitle="Manage Viewing Appointments page is currently under development."
-              />
+                <ManageBuyerViewingAppointments />
               </RequireAuth>
             }
           />
@@ -107,10 +109,16 @@ export default function App() {
             path="/sales-agent/manage-my-viewing-appointments"
             element={
               <RequireAuth>
-                <NotFound
-                title="Under Development"
-                subtitle="Manage Viewing Appointments page is currently under development."
-              />
+                <ManageMyViewingAppointments />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/sales-agent/manage-offers"
+            element={
+              <RequireAuth>
+                <ManageSellerOffers />
               </RequireAuth>
             }
           />
@@ -128,9 +136,7 @@ export default function App() {
             path="/admin/metrics"
             element={
               <RequireAuth>
-                <NotFound
-                title="Under Development"
-                subtitle="Manage Viewing Appointments page is currently under development."
+                <AdminMetrics
               />
               </RequireAuth>
             }

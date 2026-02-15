@@ -13,7 +13,7 @@ import useRandom3DImage from "../hooks/useRandom3DImage";
   - Učitavanje property-ja po ID iz backend-a.
   - Prikaz Sales Agent (UserResource) detalja iz property.sales_agent.
   - Make an Offer otvara reusable Modal.
-  - Book a Viewing Appointment daje toast poruku (under development).
+  - Book a Viewing Appointment vodi na buyer viewing appointments page (prefill property_id).
 */
 
 export default function PropertyDetails() {
@@ -137,11 +137,7 @@ export default function PropertyDetails() {
       }
 
       // Backend show() vraća data.property, ali ostavljamo fallback da bude robustno.
-      const prop =
-        json?.data?.property ||
-        json?.data ||
-        json?.property ||
-        null;
+      const prop = json?.data?.property || json?.data || json?.property || null;
 
       if (!prop) throw new Error("Property not found.");
 
@@ -176,9 +172,19 @@ export default function PropertyDetails() {
 
       <div className="pdWrap">
         <div className="pdTopBar">
-          <Button variant="secondary" onClick={() => navigate(-1)}>
-            Back
-          </Button>
+          <div className="pdTopLeftActions">
+            <Button variant="secondary" onClick={() => navigate(-1)}>
+              Back
+            </Button>
+
+            <Button
+              variant="secondary"
+              className="pdViewingsBtn"
+              onClick={() => navigate("/buyer/manage-my-viewing-appointments")}
+            >
+              My Viewing Appointments
+            </Button>
+          </div>
 
           <div className="pdTopMeta">
             <span className="pdPill">{statusLabel}</span>
@@ -292,7 +298,9 @@ export default function PropertyDetails() {
               <Button onClick={openOffer}>Make an Offer</Button>
               <Button
                 variant="secondary"
-                onClick={() => showToast("Viewing appointments are under development.")}
+                onClick={() =>
+                  navigate(`/buyer/manage-my-viewing-appointments?property_id=${property?.id ?? id}`)
+                }
               >
                 Book a Viewing Appointment
               </Button>
@@ -419,6 +427,13 @@ const css = `
     justify-content:space-between;
     gap: 12px;
     margin-bottom: 12px;
+  }
+
+  .pdTopLeftActions{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items:center;
   }
 
   .pdTopMeta{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; }

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OfferController extends Controller
 {
@@ -172,4 +173,59 @@ class OfferController extends Controller
             'data' => (new OfferResource($offer->fresh()))->resolve(),
         ], 200);
     }
+
+    public function updateStatus(Request $request, Offer $offer)
+    {
+        if ($resp = $this->ensureSalesAgent($request)) return $resp;
+
+        $offer->load('property');
+
+        if (!$offer->property || (int) $offer->property->sales_agent_id !== (int) $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nemate dozvolu za ovu akciju.',
+                'errors' => ['authorization' => ['Možete menjati ponude samo za svoje nekretnine.']],
+            ], 403);
+        }
+
+        if ($offer->status !== Offer::STATUS_PENDING) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Promena nije dozvoljena.',
+                'errors' => ['status' => ['Samo pending ponuda može da se prihvati ili odbije.']],
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'status' => ['required', Rule::in([Offer::STATUS_ACCEPTED, Offer::STATUS_REJECTED])],
+        ]);
+
+        $next = $validated['status'];
+
+        $offer = DB::transaction(function () use ($offer, $next) {
+            $offer->update(['status' => $next]);
+
+            if ($next === Offer::STATUS_ACCEPTED) {
+                // Optional but recommended: reserve the property once an offer is accepted.
+                $offer->property()->update(['status' => Property::STATUS_RESERVED]);
+
+                // Reject all other pending offers for this property.
+                Offer::where('property_id', $offer->property_id)
+                    ->where('id', '!=', $offer->id)
+                    ->where('status', Offer::STATUS_PENDING)
+                    ->update(['status' => Offer::STATUS_REJECTED]);
+            }
+
+            return $offer;
+        });
+
+        $offer->load(['property', 'buyer', 'transaction']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status ponude je uspešno ažuriran.',
+            'data' => (new OfferResource($offer))->resolve(),
+        ], 200);
+    }
+
 }
