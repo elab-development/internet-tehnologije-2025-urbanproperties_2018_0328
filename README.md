@@ -2,7 +2,7 @@
 
 Urban Properties je full-stack veb aplikacija namenjena upravljanju prodajom nekretnina, pregledom ponuda i zakazivanjem termina za razgledanje. Aplikacija nastaje kao odgovor na potrebu za centralizovanom i preglednom platformom koja povezuje kupce i prodajne agente kroz jasan i kontrolisan proces: od pretrage i pregleda nekretnina, preko zakazivanja gledanja, do slanja ponuda i praćenja ishoda.
 
-![Urban Properties Logo](./urban-properties-frontend/public/images/urban_properties_logo.png)
+![Urban Properties Logo](./urban-properties-frontend/public/favicon.ico)
 
 Glavni cilj aplikacije je da kupcima omogući jednostavno pretraživanje i detaljan pregled nekretnina, uz vizuelno atraktivan prikaz (slike, 3D prikaz kada je dostupan), kao i brzu akciju u vidu zakazivanja viewing appointment termina i slanja ponude. Paralelno, Urban Properties prodajnim agentima pruža alat za upravljanje sopstvenim nekretninama, viewing appointment zahtevima i ponudama, dok administratorima omogućava upravljanje korisnicima, generisanje izveštaja i praćenje metrika sistema.
 
@@ -152,7 +152,7 @@ php artisan serve
 
 2. Pokrenite frontend:
 ```bash
-cd ../urban-properties-frontend
+cd urban-properties-frontend
 npm install
 npm start
 ```
