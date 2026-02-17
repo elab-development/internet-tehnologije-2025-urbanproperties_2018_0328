@@ -1,7 +1,7 @@
 {
   "name": "urban-properties-frontend",
   "version": "0.1.0",
-  "proxy": "http://127.0.0.1:8000",
+  "proxy": "http://backend:8000",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
